@@ -1,3 +1,5 @@
+'use strict';
+
 const restify = require('restify');
 const azure = require('azure-storage');
 const tile = require('./tile.js');
