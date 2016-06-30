@@ -1,0 +1,27 @@
+{
+  "name": "dengue-tile-server",
+  "version": "1.0.0",
+  "description": "Tile server for aggregating all layers for an area",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/CatalystCode/dengue-tile-server.git"
+  },
+  "keywords": [
+    "dengue",
+    "tileserver"
+  ],
+  "author": "sachinkundu@gmail.com",
+  "dependencies": {
+    "restify": ">= 4.1.1",
+    "azure-storage": ">= 1.1.0"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CatalystCode/dengue-tile-server/issues"
+  },
+  "homepage": "https://github.com/CatalystCode/dengue-tile-server#readme"
+}
