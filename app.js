@@ -1,16 +1,17 @@
-var restify = require('restify');
-var azure = require('azure-storage');
-var blobService = azure.createBlobService();
+const restify = require('restify');
+const azure = require('azure-storage');
+const tile = require('./tile.js');
 
-var tile = require('./tile.js');
+const blobService = azure.createBlobService();
 
-var server = restify.createServer({
+const server = restify.createServer({
   name: 'tile-server',
   version: '1.0.0'
 });
 
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.queryParser());
+server.use(restify.CORS());
 
 server.get('/tiles/', function (req, res, next) {
   tileIds = tile.tileIdsForBoundingBox({
@@ -20,27 +21,31 @@ server.get('/tiles/', function (req, res, next) {
     east: parseFloat(req.query.east)
   }, parseInt(req.query.zoom));
 
-  aggregateResults = {};
-  var promiseCollection = [];
-  tileIds.forEach(function (tile) {
-    tileSplit = tile.split('_');
-    path = '2015/06/06/' + tileSplit[0] + '/' + tileSplit[2] + '/' + tileSplit[1] + '/twitter.json';
-    promiseCollection.push(new Promise(function (resolve, reject) {
-      blobService.getBlobToText('layers', path, function (error, result, response) {
-        if (!error) {
+  let aggregateResults = {};
+  let promiseCollection = [];
+
+  tileIds.forEach((tile) => {
+    const tileSplit = tile.split('_');
+    const path = `2015/06/06/${tileSplit[0]}/${tileSplit[2]}/${tileSplit[1]}/twitter.json`;
+
+    promiseCollection.push(new Promise((resolve, reject) => {
+      blobService.getBlobToText('layers', path, (err, result, response) => {
+        if (!err) {
           aggregateResults[tile] = JSON.parse(result);
           resolve(JSON.parse(result));
         } else {
-          console.warn(error.statusCode);
+          console.warn(err.statusCode);
           resolve(null);
         }
       });
     }));
   });
-  Promise.all(promiseCollection).then(function (results) {
-    res.send(JSON.stringify(aggregateResults));
-    next();
-  });
+
+  Promise.all(promiseCollection)
+    .then(function (results) {
+      res.send(JSON.stringify(aggregateResults));
+      next();
+    });
 });
 
 
