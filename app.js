@@ -16,7 +16,7 @@ server.use(restify.queryParser());
 server.use(restify.CORS());
 
 server.get('/tiles/', function (req, res, next) {
-  tileIds = tile.tileIdsForBoundingBox({
+  const tileIds = tile.tileIdsForBoundingBox({
     north: parseFloat(req.query.north),
     west: parseFloat(req.query.west),
     south: parseFloat(req.query.south),
