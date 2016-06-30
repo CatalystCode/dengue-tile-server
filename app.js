@@ -45,7 +45,7 @@ server.get('/tiles/', function (req, res, next) {
 
   Promise.all(promiseCollection)
     .then(function (results) {
-      res.send(JSON.stringify(aggregateResults));
+      res.send(aggregateResults);
       next();
     });
 });
